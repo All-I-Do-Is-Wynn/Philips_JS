@@ -1,5 +1,7 @@
 import fetch from "node-fetch";
 
+// Test Code
+
 const FHIR_BASE_URL = "https://hapi.fhir.org/baseR4";
 
 async function fetchPatients() {

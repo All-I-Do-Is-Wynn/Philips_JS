@@ -2,9 +2,11 @@ import fetch from "node-fetch";
 
 const FHIR_BASE_URL = "https://hapi.fhir.org/baseR4";
 
+// Find x number of patients from the URL (fetch)
+
 async function fetchPatients() {
   try {
-    // Search for patients (limit to 5 results)
+    // Search for patients (limit to x results)
     const response = await fetch(`${FHIR_BASE_URL}/Patient?_count=30`);
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
@@ -13,7 +15,7 @@ async function fetchPatients() {
     const bundle = await response.json();
 
     if (bundle.entry && bundle.entry.length > 0) {
-      bundle.entry.forEach((entry, index) => {
+        bundle.entry.forEach((entry, index) => {
         const patient = entry.resource;
         const nameObj = patient.name?.[0] || {};
         const given = nameObj.given?.[0] || "N/A";

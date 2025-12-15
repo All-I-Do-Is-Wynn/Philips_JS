@@ -1,3 +1,7 @@
+
+
+// Fetched per findnumPatients.js script
+
 Patient 1: N/A N/A (ID: 47936440)
 Patient 2: NuÃ±ez Karla (ID: 47936499)
 Patient 3: NuÃ±ez Karla (ID: 47936500)
