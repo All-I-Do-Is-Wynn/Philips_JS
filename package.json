@@ -1,0 +1,16 @@
+{
+  "name": "philips_js",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "fetchPatient.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
