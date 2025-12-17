@@ -1,0 +1,19 @@
+HL7 Message framing example:
+
+// Start Block
+// contents
+// End Block
+// Carriage Return
+
+
+// ASCII 0x0B (Vertical Tab)
+// contents
+// ASCII 0x1C (File separator)
+// ASCII 0x0D
+
+<SB>
+MSH|^~\&|HOSPITAL|ADT|LAB|ADT|202512161946||ADT^A01|MSG00001|P|2.5
+EVN|A01|202512161946
+PID|1||123456^^^HOSPITAL^MR||DOE^JOHN||19800101|M|||123 MAIN ST^^LOUISVILLE^KY^40202||(502)555-1234|||M||123456789
+PV1|1|I|2000^2012^01||||1234^PRIMARY^PHYSICIAN||||||||||||
+<EB><CR>
