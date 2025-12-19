@@ -78,7 +78,13 @@ export function startMllpServer({ host = "0.0.0.0", port = 2575, onMessage }) {
 startMllpServer({
   port: 2575,
   onMessage: (hl7, socket) => {
-    console.log("\n--- HL7 v2 Message Received ---\n" + hl7);
-    // TODO: Parse HL7 segments, route to your pipeline, persist in DB, etc.
+    // Normalize carriage returns for readability
+    const prettyMessage = hl7.replace(/\r/g, "\n");
+
+    console.log("\n--- HL7 Message Received ---");
+    console.log(prettyMessage);
+
+    // TODO: Add parsing logic here (split into segments, route, etc.)
+
   },
 });
