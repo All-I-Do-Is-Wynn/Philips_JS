@@ -1,15 +1,15 @@
-// fhirClientInteractive.js
+// FHIR Client sender of example FHIR modules
 import fetch from "node-fetch"; // Node ≥18 has native fetch, otherwise install
 import readline from "readline";
 
 // Define 5 sample FHIR resources
 const fhirResources = {
   1: {
-    "resourceType": "Patient",
-    "id": "patient-example",
-    "name": [{ use: "official", family: "Doe", given: ["John"] }],
-    "gender": "male",
-    "birthDate": "1980-01-01"
+    resourceType: "Patient",
+    id: "patient-example",
+    name: [{ use: "official", family: "Doe", given: ["John"] }],
+    gender: "male",
+    birthDate: "1980-01-01"
   },
   2: {
     resourceType: "Observation",
