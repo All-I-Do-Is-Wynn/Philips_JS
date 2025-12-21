@@ -13,9 +13,10 @@
     <button onclick="send('start-fhir')">Start FHIR</button>
     <button onclick="send('stop-mllp')">Stop MLLP</button>
     <button onclick="send('stop-fhir')">Stop FHIR</button>
-
+    
+    
     <h3>HL7 Sender</h3>
-    <select id="hl7Select">
+    <select id="hl7Select" onchange="updateHL7Preview()">
         <option value="1">ADT^A01</option>
         <option value="2">ORM^O01</option>
         <option value="3">ORU^R01</option>
@@ -30,7 +31,7 @@
     <button onclick="sendHL7()">Send HL7</button>
 
     <h3>FHIR Sender</h3>
-    <select id="fhirSelect">
+    <select id="fhirSelect" onchange="updateFHIRPreview()">
         <option value="1">Patient</option>
         <option value="2">Observation</option>
         <option value="3">Encounter</option>
@@ -38,6 +39,9 @@
         <option value="5">MedicationRequest</option>
     </select>
   <button onclick="sendFHIR()">Send FHIR</button>
+
+    <h3>Message Preview</h3>
+    <pre id="previewBox" class="preview"></pre>
 
 
     <!--<button onclick="send('send-hl7')">Send HL7 Example</button>

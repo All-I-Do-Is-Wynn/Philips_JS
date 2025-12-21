@@ -15,15 +15,31 @@ export function startWebSocket() {
     ws.send(JSON.stringify({ type: "logs", data: logs }));
 
     ws.on("message", (msg) => {
-      const { action } = JSON.parse(msg);
+      const data = JSON.parse(msg);
 
-      switch (action) {
+      switch (data.action) {
         case "start-mllp": startMllp(); break;
         case "stop-mllp": stopMllp(); break;
         case "start-fhir": startFhir(); break;
         case "stop-fhir": stopFhir(); break;
-        case "send-hl7": sendHL7(hl7Messages[msg.index || 1]); break;
-        case "send-fhir": sendResource(fhirResources[1]); break;
+        case "send-hl7":
+            sendHL7(hl7Messages[data.index]);
+            break;
+        case "send-fhir":
+            sendResource(fhirResources[data.index]);
+            break;
+        case "preview-hl7":
+            ws.send(JSON.stringify({
+            type: "preview",
+            data: hl7Messages[data.index]
+            }));
+            break;
+        case "preview-fhir":
+            ws.send(JSON.stringify({
+            type: "preview",
+            data: JSON.stringify(fhirResources[data.index], null, 2)
+            }));
+            break;
       }
     });
   });

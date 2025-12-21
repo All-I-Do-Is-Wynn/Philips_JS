@@ -22,3 +22,22 @@ body {
   overflow-y: scroll;
   border: 1px solid #0f0;
 }
+
+select {
+  background: #222;
+  color: #0f0;
+  border: 1px solid #0f0;
+  padding: 5px;
+  margin-right: 10px;
+}
+
+.preview {
+  background: #111;
+  color: #0f0;
+  border: 1px solid #0f0;
+  padding: 15px;
+  height: 200px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  white-space: pre-wrap;
+}

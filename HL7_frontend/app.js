@@ -7,16 +7,33 @@ ws.onmessage = (event) => {
     document.getElementById("terminal").textContent =
       msg.data.join("\n");
   }
+
+  if (msg.type === "preview") {
+    document.getElementById("previewBox").textContent = msg.data;
+  }
 };
 
 function send(action) {
   ws.send(JSON.stringify({ action }));
 }
 
-function sendFHIR(index) {
+function sendHL7() {
+  const index = document.getElementById("hl7Select").value;
+  ws.send(JSON.stringify({ action: "send-hl7", index }));
+}
+
+function sendFHIR() {
+  const index = document.getElementById("fhirSelect").value;
   ws.send(JSON.stringify({ action: "send-fhir", index }));
 }
 
-function sendHL7(index) {
-  ws.send(JSON.stringify({ action: "send-hl7", index }));
+function updateHL7Preview() {
+  const index = document.getElementById("hl7Select").value;
+  ws.send(JSON.stringify({ action: "preview-hl7", index }));
 }
+
+function updateFHIRPreview() {
+  const index = document.getElementById("fhirSelect").value;
+  ws.send(JSON.stringify({ action: "preview-fhir", index }));
+}
+
