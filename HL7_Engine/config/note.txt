@@ -1,0 +1,2 @@
+// pipelines.json is used to control pipelines turned on and off
+// also to control the autousage of these pipelines

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HL7 Engine Control Panel</title>
+  <script defer src="app.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>HL7/FHIR Integration Console</h1>
+
+  <div class="controls">
+    <button onclick="send('start-mllp')">Start MLLP</button>
+    <button onclick="send('start-fhir')">Start FHIR</button>
+    <button onclick="send('stop-mllp')">Stop MLLP</button>
+    <button onclick="send('stop-fhir')">Stop FHIR</button>
+
+    <h3>HL7 Sender</h3>
+    <select id="hl7Select">
+        <option value="1">ADT^A01</option>
+        <option value="2">ORM^O01</option>
+        <option value="3">ORU^R01</option>
+        <option value="4">DFT^P03</option>
+        <option value="5">SIU^S12</option>
+        <option value="6">MDM^T02</option>
+        <option value="7">BAR^P01</option>
+        <option value="8">RDE^O11</option>
+        <option value="9">RDS^O13</option>
+        <option value="10">VXU^V04</option>
+    </select>
+    <button onclick="sendHL7()">Send HL7</button>
+
+    <h3>FHIR Sender</h3>
+    <select id="fhirSelect">
+        <option value="1">Patient</option>
+        <option value="2">Observation</option>
+        <option value="3">Encounter</option>
+        <option value="4">Immunization</option>
+        <option value="5">MedicationRequest</option>
+    </select>
+  <button onclick="sendFHIR()">Send FHIR</button>
+
+
+    <!--<button onclick="send('send-hl7')">Send HL7 Example</button>
+    <button onclick="sendHL7(1)">Send ADT^A01</button>-->
+    
+    <!--<button onclick="send('send-fhir')">Send FHIR Example</button>
+    <button onclick="sendFHIR(1)">Send FHIR Patient</button>-->
+  </div>
+
+  <pre id="terminal"></pre>
+</body>
+</html>

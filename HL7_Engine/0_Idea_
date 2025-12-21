@@ -22,3 +22,86 @@ HL7 Engine Roadmap to Start
 6.) Connect to Epic/Cerner test environments
 - Epic: use their sandbox HL7 v2 feeds and open.epic FHIR APIs.
 - Cerner: use their Millennium FHIR sandbox.
+
+
+
+
+
+                   ┌──────────────────────────────┐
+                   │       Integration Engine     │
+                   └──────────────────────────────┘
+                                │
+        ┌───────────────────────┼────────────────────────┐
+        │                       │                        │
+        ▼                       ▼                        ▼
+┌──────────────┐       ┌────────────────┐       ┌──────────────────┐
+│ HL7 v2 MLLP  │       │  FHIR REST API │       │ Admin / Dashboard │
+│ Listener     │       │ Listener       │       │ (optional)        │
+│ (TCP 2575)   │       │ (HTTP 3000)    │       │ (HTTP 8080)       │
+└──────────────┘       └────────────────┘       └──────────────────┘
+        │                       │
+        ▼                       ▼
+┌──────────────┐       ┌────────────────┐
+│ HL7 Parser   │       │ FHIR Validator │
+│ (segments)   │       │ (JSON schema)  │
+└──────────────┘       └────────────────┘
+        │                       │
+        └──────────────┬────────┘
+                       ▼
+             ┌────────────────────┐
+             │ Routing Layer      │
+             │ (rules, mapping)   │
+             └────────────────────┘
+                       │
+                       ▼
+             ┌────────────────────┐
+             │Transformation Layer│
+             │HL7 ↔ FHIR mapping  │
+             └────────────────────┘
+                       │
+                       ▼
+             ┌────────────────────┐
+             │Storage / Queueing  │
+             │(DB, Kafka, Redis)  │
+             └────────────────────┘
+                       │
+                       ▼
+             ┌────────────────────┐
+             │Downstream Systems  │
+             │(EHR, LIS, RIS, etc)│
+             └────────────────────┘
+
+HL7 Workflow:
+MLLP Listener → HL7 Parser → Router → Transformer → Storage → Downstream
+
+FHIR Workflow:
+FHIR Listener → JSON Validator → Router → Transformer → Storage → Downstream
+
+
+
+HL7 Listener (TCP 2575)        FHIR Listener (HTTP 3000)
+          │                               │
+          ▼                               ▼
+   HL7 Parser                        FHIR Validator
+          │                               │
+          └──────────────┬────────────────┘
+                         ▼
+              Normalized Message Object
+                         │
+                         ▼
+                  Routing Layer
+                         │
+        ┌────────────────┼────────────────┐
+        ▼                ▼                ▼
+ PatientPipeline   LabPipeline    EncounterPipeline
+        │                │                │
+        ▼                ▼                ▼
+   Transform HL7↔FHIR   Save to DB   Forward to EHR
+        │                │                │
+        ▼                ▼                ▼
+ Downstream Systems (Epic, Cerner, DB, Analytics)
+
+
+
+
+
