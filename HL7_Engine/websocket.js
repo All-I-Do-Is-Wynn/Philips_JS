@@ -59,7 +59,7 @@ export function startWebSocket() {
         case "run-route-hl7": {
             const raw = hl7Messages[data.index];
             const nmo = normalizeHL7(raw);
-            const routed = routeMessage(nmo);
+            const routed = await routeMessage(nmo);
 
             ws.send(JSON.stringify({
             type: "preview",
@@ -81,7 +81,7 @@ export function startWebSocket() {
         case "run-route-fhir": {
             const raw = fhirResources[data.index];
             const nmo = normalizefhir(raw);
-            const routed = routeMessage(nmo);
+            const routed = await routeMessage(nmo);
 
             ws.send(JSON.stringify({
             type: "preview",

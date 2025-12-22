@@ -1,11 +1,45 @@
 // mapping/fhirToHl7/patientToAdt.js
+export function patientToAdt(patient) {
+  const name = patient.name?.[0] || {};
+  const family = name.family || "";
+  const given = name.given?.[0] || "";
 
-export function patientToAdt(nmo) {
-    const p = nmo.parsed;
-  
-    const msh = `MSH|^~\\&|FHIR|ENGINE|HL7|ENGINE|${nmo.timestamp}||ADT^A08|${p.id}|P|2.5`;
-    const pid = `PID|1||${p.id}||${p.name?.[0]?.family}^${p.name?.[0]?.given?.[0]}||${p.birthDate}|||`;
-  
-    return `${msh}\r${pid}\r`;
-  }
+  const gender =
+    patient.gender === "male"
+      ? "M"
+      : patient.gender === "female"
+      ? "F"
+      : "U";
+
+  const pidSegment = [
+    "PID",
+    "",
+    "",
+    patient.id || "",
+    "",
+    `${family}^${given}`,
+    "",
+    patient.birthDate || "",
+    gender
+  ];
+
+  const mshSegment = [
+    "MSH",
+    "|",
+    "^~\\&",
+    "APP",
+    "FAC",
+    "RCVAPP",
+    "RCVFAC",
+    new Date().toISOString(),
+    "",
+    "ADT^A01",
+    "MSGID123",
+    "P",
+    "2.5"
+  ];
+
+  return [mshSegment, pidSegment];
+}
+
   

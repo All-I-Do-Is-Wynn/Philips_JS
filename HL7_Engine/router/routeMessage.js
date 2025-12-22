@@ -13,6 +13,7 @@ export async function routeMessage(nmo) {
   }
 
   for (const rule of rules) {
+    log(`Protocol detected: ${nmo.protocol}`);
     if (rule.match(nmo)) {
       log(`Matched pipeline: ${rule.pipeline}`);
       return await runPipeline(rule.pipeline, nmo);  // <-- CRITICAL

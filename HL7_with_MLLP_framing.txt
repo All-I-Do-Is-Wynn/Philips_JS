@@ -9,7 +9,7 @@ HL7 Message framing example:
 // ASCII 0x0B (Vertical Tab)
 // contents
 // ASCII 0x1C (File separator)
-// ASCII 0x0D
+// ASCII 0x0D (cr)
 
 <SB>
 MSH|^~\&|HOSPITAL|ADT|LAB|ADT|202512161946||ADT^A01|MSG00001|P|2.5

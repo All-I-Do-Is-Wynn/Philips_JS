@@ -1,7 +1,7 @@
 // engine/listeners/mllpManager.js
 import net from "net";
 import { normalizeHL7 } from "../normalizers/normalizehl7.js";
-import { routeMessage } from "../router/routeMessage_OTU.js";
+import { routeMessage } from "../router/routeMessage.js";
 import { log } from "../logStream.js";
 
 const MLLP = {

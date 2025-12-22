@@ -13,6 +13,7 @@ import { barToAccount } from "./barToAccount.js";           // BAR -> Account
 
 export function mapHL7toFHIR(nmo) {
   const type = nmo.type || "";
+  const msg = nmo.parsed || {};
 
   // ADT → Patient
   if (type.startsWith("ADT")) {
@@ -73,7 +74,12 @@ export function mapHL7toFHIR(nmo) {
         code: "not-supported",
         diagnostics: `No HL7→FHIR mapping implemented for message type: ${type}`
       }
-    ]
+    ],
+    _hl7: {
+      type,
+      raw: msg
+    }
+
   };
 }
 
