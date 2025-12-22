@@ -1,6 +1,46 @@
-const ws = new WebSocket("ws://localhost:8081");
+window.addEventListener("load", () => {
+  console.log("Creating WebSocket…");
+  const ws = new WebSocket("ws://10.0.0.2:8081");
+
+  ws.onopen = () => console.log("WS OPEN");
+  ws.onerror = (err) => console.log("WS ERROR", err);
+  ws.onclose = () => console.log("WS CLOSED");
+
+  ws.onmessage = (event) => {
+    console.log("RAW WS MESSAGE:", event.data);
+    const msg = JSON.parse(event.data);
+
+    if (msg.type === "logs") {
+      document.getElementById("terminal").textContent = msg.data.join("\n");
+    }
+
+    if (msg.type === "preview") {
+      const formatted = typeof msg.data === "string"
+        ? msg.data.replace(/\r/g, "\n")
+        : msg.data;
+
+      document.getElementById("previewBox").textContent = formatted;
+    }
+  };
+
+  // expose ws globally if needed
+  window.ws = ws;
+});
+
+console.log("APP.JS LOADED at", Date.now());
+window.addEventListener("load", () => {
+  console.log("WINDOW LOADED at", Date.now());
+});
+
+console.log("APP.JS VERSION 9999");
+ws.onopen = () => console.log("WS OPEN");
+ws.onerror = (err) => console.log("WS ERROR", err);
+ws.onclose = () => console.log("WS CLOSED");
+
 
 ws.onmessage = (event) => {
+    console.log("RAW WS MESSAGE:");
+
   const msg = JSON.parse(event.data);
 
   if (msg.type === "logs") {
@@ -9,8 +49,13 @@ ws.onmessage = (event) => {
   }
 
   if (msg.type === "preview") {
-    document.getElementById("previewBox").textContent = msg.data;
-  }
+  const formatted = typeof msg.data === "string"
+    ? msg.data.replace(/\r/g, "\n")
+    : msg.data;
+
+  document.getElementById("previewBox").textContent = formatted;
+}
+
 };
 
 function send(action) {

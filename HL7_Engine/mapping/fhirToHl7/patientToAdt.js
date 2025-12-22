@@ -1,5 +1,8 @@
-// mapping/fhirToHl7/patientToAdt.js
+import { buildMSH } from "../hl7Header.js";
+
 export function patientToAdt(patient) {
+  const msh = buildMSH("ADT^A01");
+
   const name = patient.name?.[0] || {};
   const family = name.family || "";
   const given = name.given?.[0] || "";
@@ -11,7 +14,7 @@ export function patientToAdt(patient) {
       ? "F"
       : "U";
 
-  const pidSegment = [
+  const pid = [
     "PID",
     "",
     "",
@@ -23,23 +26,7 @@ export function patientToAdt(patient) {
     gender
   ];
 
-  const mshSegment = [
-    "MSH",
-    "|",
-    "^~\\&",
-    "APP",
-    "FAC",
-    "RCVAPP",
-    "RCVFAC",
-    new Date().toISOString(),
-    "",
-    "ADT^A01",
-    "MSGID123",
-    "P",
-    "2.5"
-  ];
-
-  return [mshSegment, pidSegment];
+  return [msh, pid];
 }
 
   

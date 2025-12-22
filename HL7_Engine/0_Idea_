@@ -102,6 +102,7 @@ HL7 Listener (TCP 2575)        FHIR Listener (HTTP 3000)
  Downstream Systems (Epic, Cerner, DB, Analytics)
 
 
-
+UI Output workflow
+UI → WebSocket → routeMessage() → runPipeline() → pipeline → runPipeline() → routeMessage() → WebSocket → UI
 
 

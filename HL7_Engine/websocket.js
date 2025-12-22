@@ -8,6 +8,7 @@ import { normalizeHL7 } from "./normalizers/normalizehl7.js";
 import { normalizefhir } from "./normalizers/normalizefhir.js";
 import { routeMessage } from "./router/routeMessage.js";
 import { previewRoute } from "./mapping/previewRoute.js";
+import { segmentsToHL7, extractHL7Segments } from "./mapping/hl7serialize.js";
 
 
 export function startWebSocket() {
@@ -15,6 +16,8 @@ export function startWebSocket() {
 
   wss.on("connection", (ws) => {
     log("Web UI connected");
+    console.log("CLIENT CONNECTED");
+
 
     // Send existing logs immediately
     ws.send(JSON.stringify({ type: "logs", data: logs }));
@@ -72,9 +75,14 @@ export function startWebSocket() {
             const nmo = normalizefhir(raw);
             const routed = await previewRoute(nmo);
 
+            // Serialize fhir message from array format -> HL7 format
+            const hl7String = Array.isArray(routed[0])
+            ? segmentsToHL7(routed)
+            : routed; // in case some mappings already return string
+
             ws.send(JSON.stringify({
             type: "preview",
-            data: JSON.stringify(routed, null, 2)
+            data: hl7String
             }));
             break;
         }
@@ -83,12 +91,15 @@ export function startWebSocket() {
             const nmo = normalizefhir(raw);
             const routed = await routeMessage(nmo);
 
+            // routed is already the HL7 segment array
+            const hl7String = segmentsToHL7(routed);
+
             ws.send(JSON.stringify({
             type: "preview",
-            data: JSON.stringify(routed, null, 2)
+            data: hl7String
             }));
             break;
-        }
+            }
         }
     });
   });
