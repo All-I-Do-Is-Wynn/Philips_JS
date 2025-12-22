@@ -37,3 +37,12 @@ function updateFHIRPreview() {
   ws.send(JSON.stringify({ action: "preview-fhir", index }));
 }
 
+function previewHL7Route() {
+  const index = document.getElementById("hl7Select").value;
+  ws.send(JSON.stringify({ action: "preview-route-hl7", index }));
+}
+
+function previewFHIRRoute() {
+  const index = document.getElementById("fhirSelect").value;
+  ws.send(JSON.stringify({ action: "preview-route-fhir", index }));
+}

@@ -4,6 +4,11 @@ import { startMllp, stopMllp } from "./listeners/mllpManager.js";
 import { startFhir, stopFhir } from "./listeners/fhirManager.js";
 import { sendHL7, hl7Messages } from "./senderClients/mllpSender.js";
 import { sendResource, fhirResources } from "./senderClients/fhirSender.js";
+import { normalizeHL7 } from "./normalizers/normalizehl7.js";
+import { normalizefhir } from "./normalizers/normalizefhir.js";
+import { routeMessage } from "./router/routeMessage.js";
+import { previewRoute } from "./mapping/previewRoute.js";
+
 
 export function startWebSocket() {
   const wss = new WebSocketServer({ port: 8081 });
@@ -14,10 +19,10 @@ export function startWebSocket() {
     // Send existing logs immediately
     ws.send(JSON.stringify({ type: "logs", data: logs }));
 
-    ws.on("message", (msg) => {
+    ws.on("message", async (msg) => {
       const data = JSON.parse(msg);
 
-      switch (data.action) {
+        switch (data.action) {
         case "start-mllp": startMllp(); break;
         case "stop-mllp": stopMllp(); break;
         case "start-fhir": startFhir(); break;
@@ -40,7 +45,51 @@ export function startWebSocket() {
             data: JSON.stringify(fhirResources[data.index], null, 2)
             }));
             break;
-      }
+        case "preview-route-hl7": {
+            const raw = hl7Messages[data.index];
+            const nmo = normalizeHL7(raw);
+            const routed = await previewRoute(nmo);
+
+            ws.send(JSON.stringify({
+            type: "preview",
+            data: JSON.stringify(routed, null, 2)
+            }));
+            break;
+        }
+        case "run-route-hl7": {
+            const raw = hl7Messages[data.index];
+            const nmo = normalizeHL7(raw);
+            const routed = routeMessage(nmo);
+
+            ws.send(JSON.stringify({
+            type: "preview",
+            data: JSON.stringify(routed, null, 2)
+            }));
+            break;
+        }
+        case "preview-route-fhir": {
+            const raw = fhirResources[data.index];
+            const nmo = normalizefhir(raw);
+            const routed = await previewRoute(nmo);
+
+            ws.send(JSON.stringify({
+            type: "preview",
+            data: JSON.stringify(routed, null, 2)
+            }));
+            break;
+        }
+        case "run-route-fhir": {
+            const raw = fhirResources[data.index];
+            const nmo = normalizefhir(raw);
+            const routed = routeMessage(nmo);
+
+            ws.send(JSON.stringify({
+            type: "preview",
+            data: JSON.stringify(routed, null, 2)
+            }));
+            break;
+        }
+        }
     });
   });
 

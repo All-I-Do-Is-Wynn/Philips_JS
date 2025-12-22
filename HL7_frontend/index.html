@@ -29,6 +29,8 @@
         <option value="10">VXU^V04</option>
     </select>
     <button onclick="sendHL7()">Send HL7</button>
+    <button onclick="previewHL7Route()">Preview Routed HL7</button>
+
 
     <h3>FHIR Sender</h3>
     <select id="fhirSelect" onchange="updateFHIRPreview()">
@@ -39,6 +41,8 @@
         <option value="5">MedicationRequest</option>
     </select>
   <button onclick="sendFHIR()">Send FHIR</button>
+  <button onclick="previewFHIRRoute()">Preview Routed FHIR</button>
+
 
     <h3>Message Preview</h3>
     <pre id="previewBox" class="preview"></pre>

@@ -1,5 +1,6 @@
-export default async function EncounterPipeline(nmo) {
-    console.log("\n[EncounterPipeline] Processing Encounter message...");
-    console.log(JSON.stringify(nmo, null, 2));
-  }
-  
+// pipelines/EncounterPipeline/index.js
+import { mapEngine } from "../../mapping/mapEngine.js";
+
+export default async function(nmo) {
+  return await mapEngine("HL7v2", "FHIR", nmo);
+}

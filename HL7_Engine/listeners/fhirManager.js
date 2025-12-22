@@ -1,6 +1,6 @@
 import http from "http";
 import { normalizefhir } from "../normalizers/normalizefhir.js";
-import { routeMessage } from "../router/routeMessage.js";
+import { routeMessage } from "../router/routeMessage_OTU.js";
 import { log } from "../logStream.js";
 
 let fhirServer = null;

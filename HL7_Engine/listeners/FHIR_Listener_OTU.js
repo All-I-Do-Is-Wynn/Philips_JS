@@ -2,7 +2,7 @@
 // Research Express library implementation
 import http from "http";
 import { normalizefhir } from "../normalizers/normalizefhir.js";
-import { routeMessage } from "../router/routeMessage.js";
+import { routeMessage } from "../router/routeMessage_OTU.js";
 
 const server = http.createServer((req, res) => {
   if (req.method === "POST" && req.url === "/fhir") {

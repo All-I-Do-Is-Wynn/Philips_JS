@@ -1,5 +1,6 @@
-export default async function ObservationPipeline(nmo) {
-    console.log("\n[ObservationPipeline] Processing Observation message...");
-    console.log(JSON.stringify(nmo, null, 2));
-  }
-  
+// pipelines/ObservationPipeline/index.js
+import { mapEngine } from "../../mapping/mapEngine.js";
+
+export default async function(nmo) {
+  return await mapEngine("HL7v2", "FHIR", nmo);
+}

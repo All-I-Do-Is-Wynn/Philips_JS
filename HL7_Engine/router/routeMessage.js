@@ -1,27 +1,25 @@
-/// router/routeMessage.js
+// router/routeMessage.js
 import { routingRules } from "./routingRules.js";
 import { runPipeline } from "./runPipeline.js";
+import { log } from "../logStream.js";
 
-export function routeMessage(nmo) {
-  console.log("\n--- Routing Message ---");
-  console.log("Protocol:", nmo.protocol);
-  console.log("Type:", nmo.type || nmo.resourceType);
-  console.log("Patient ID:", nmo.patientId);
+export async function routeMessage(nmo) {
+  log(`Routing message: ${nmo.type || nmo.resourceType}`);
 
   const rules = routingRules[nmo.protocol];
-
   if (!rules) {
-    console.error("No routing rules for protocol:", nmo.protocol);
-    return;
+    log(`No routing rules for protocol: ${nmo.protocol}`);
+    return null;
   }
 
   for (const rule of rules) {
     if (rule.match(nmo)) {
-      console.log("Matched pipeline:", rule.pipeline);
-      runPipeline(rule.pipeline, nmo);
-      return;
+      log(`Matched pipeline: ${rule.pipeline}`);
+      return await runPipeline(rule.pipeline, nmo);  // <-- CRITICAL
     }
   }
 
-  console.warn("No matching pipeline found for message.");
+  log("No matching pipeline found");
+  return null;
 }
+

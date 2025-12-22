@@ -1,7 +1,7 @@
 // mllpListener.js
 import net from "net";
 import { normalizeHL7 } from "../normalizers/normalizehl7.js";
-import { routeMessage } from "../router/routeMessage.js";
+import { routeMessage } from "../router/routeMessage_OTU.js";
 
 const MLLP = {
   SB: 0x0b,
