@@ -12,7 +12,7 @@ import { segmentsToHL7, extractHL7Segments } from "./mapping/hl7serialize.js";
 
 
 export function startWebSocket() {
-  const wss = new WebSocketServer({ port: 8081 });
+  const wss = new WebSocketServer({ port: 8444 });
 
   wss.on("connection", (ws) => {
     log("Web UI connected");
@@ -64,6 +64,7 @@ export function startWebSocket() {
             const nmo = normalizeHL7(raw);
             const routed = await routeMessage(nmo);
 
+            log(JSON.stringify(routed));
             ws.send(JSON.stringify({
             type: "preview",
             data: JSON.stringify(routed, null, 2)
@@ -79,7 +80,7 @@ export function startWebSocket() {
             const hl7String = Array.isArray(routed[0])
             ? segmentsToHL7(routed)
             : routed; // in case some mappings already return string
-
+            
             ws.send(JSON.stringify({
             type: "preview",
             data: hl7String
@@ -94,6 +95,7 @@ export function startWebSocket() {
             // routed is already the HL7 segment array
             const hl7String = segmentsToHL7(routed);
 
+            log(hl7String); // ws send is not working properly, figure out later
             ws.send(JSON.stringify({
             type: "preview",
             data: hl7String
@@ -110,5 +112,5 @@ export function startWebSocket() {
     wss.clients.forEach((client) => client.send(payload));
   }, 500);
 
-  log("WebSocket server started on ws://localhost:8081");
+  log("WebSocket server started on ws://localhost:8444");
 }
