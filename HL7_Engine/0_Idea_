@@ -106,3 +106,92 @@ UI Output workflow
 UI → WebSocket → routeMessage() → runPipeline() → pipeline → runPipeline() → routeMessage() → WebSocket → UI
 
 
+Frontend UI -> Websocket -> Engine
+UI Button Click
+    ▼
+WebSocket Command
+    ▼
+Backend WebSocket Server
+    ▼
+Engine Component (preview, route, send)
+    ▼
+Backend sends:
+    - logs
+    - preview output
+    - routed HL7/FHIR
+    ▼
+UI updates:
+    - Terminal log panel
+    - Preview panel
+
+
+
+
+FHIR Workflow
+┌──────────────────────────────────────────────────────────────┐
+│                        FRONTEND UI                           │
+│  - User clicks: Preview FHIR, Run FHIR Route, Send FHIR      │
+│  - UI sends WebSocket commands:                              │
+│      { action: "preview-fhir", index }                       │
+│      { action: "run-route-fhir", index }                     │
+│      { action: "send-fhir", index }                          │
+└───────────────┬──────────────────────────────────────────────┘
+                │ WebSocket message
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                        WEBSOCKET SERVER                      │
+│  - Receives UI command                                       │
+│  - Loads FHIR resource from fhirResources[index]             │
+│  - Sends logs + preview back to UI                           │
+└───────────────┬──────────────────────────────────────────────┘
+                │ FHIR JSON
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                           PARSER                             │
+│  - JSON.parse()                                              │
+│  - Produces JS object                                        │
+└───────────────┬──────────────────────────────────────────────┘
+                │ Parsed FHIR
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                        NORMALIZER (FHIR)                     │
+│  - Converts FHIR → NMO                                       │
+│  - Standardizes structure for routing/mapping                │
+└───────────────┬──────────────────────────────────────────────┘
+                │ NMO
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                           ROUTER                             │
+│  - Reads resourceType, event, metadata                       │
+│  - Chooses pipeline:                                         │
+│      FHIR→HL7                                                │
+│      FHIR→FHIR                                               │
+└───────────────┬──────────────────────────────────────────────┘
+                │ Routed NMO
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                           PIPELINE                           │
+│  - Calls mapping engine                                      │
+│  - Applies transformations                                   │
+└───────────────┬──────────────────────────────────────────────┘
+                │ Transformed NMO
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                           MAPPING                            │
+│  - FHIR→HL7: Patient, Observation, Encounter, etc.           │
+│  - FHIR→FHIR: resource transforms                            │
+└───────────────┬──────────────────────────────────────────────┘
+                │ Final structured output
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                          SERIALIZER                          │
+│  - HL7: segmentsToHL7()                                      │
+│  - FHIR: JSON.stringify()                                    │
+└───────────────┬──────────────────────────────────────────────┘
+                │ HL7 string or FHIR JSON
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                        SENDER CLIENTS                        │
+│  - MLLP Sender → downstream HL7 system                       │
+│  - FHIR Sender → REST endpoint                               │
+└──────────────────────────────────────────────────────────────┘
