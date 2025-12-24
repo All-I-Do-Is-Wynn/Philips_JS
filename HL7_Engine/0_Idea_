@@ -195,3 +195,75 @@ FHIR Workflow
 │  - MLLP Sender → downstream HL7 system                       │
 │  - FHIR Sender → REST endpoint                               │
 └──────────────────────────────────────────────────────────────┘
+
+
+
+HL7 Workflow
+┌──────────────────────────────────────────────────────────────┐
+│                        FRONTEND UI                           │
+│  - User clicks: Preview HL7, Run HL7 Route, Send HL7         │
+│  - UI sends WebSocket commands:                              │
+│      { action: "preview-hl7", index }                        │
+│      { action: "run-route-hl7", index }                      │
+│      { action: "send-hl7", index }                           │
+└───────────────┬──────────────────────────────────────────────┘
+                │ WebSocket message
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                        WEBSOCKET SERVER                      │
+│  - Receives UI command                                       │
+│  - Loads HL7 message from hl7Messages[index]                 │
+│  - Sends logs + preview back to UI                           │
+└───────────────┬──────────────────────────────────────────────┘
+                │ HL7 string
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                           PARSER                             │
+│  - Splits HL7 into segments/fields                           │
+│  - Produces structured JS object                             │
+└───────────────┬──────────────────────────────────────────────┘
+                │ Parsed HL7
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                        NORMALIZER (HL7)                      │
+│  - Converts parsed HL7 → NMO (Normalized Message Object)     │
+│  - Standard field names, predictable structure               │
+└───────────────┬──────────────────────────────────────────────┘
+                │ NMO
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                           ROUTER                             │
+│  - Reads NMO metadata (MSH-9, facility, event)               │
+│  - Chooses pipeline:                                         │
+│      HL7→HL7 (transform only)                                │
+│      HL7→FHIR (mapping)                                      │
+└───────────────┬──────────────────────────────────────────────┘
+                │ Routed NMO
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                           PIPELINE                           │
+│  - Calls mapping engine                                      │
+│  - Applies transformations                                   │
+│  - Prepares output for serialization                         │
+└───────────────┬──────────────────────────────────────────────┘
+                │ Transformed NMO
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                           MAPPING                            │
+│  - HL7→FHIR: ADT, ORU, SIU, etc.                             │
+│  - HL7→HL7: segment-level transforms                         │
+└───────────────┬──────────────────────────────────────────────┘
+                │ Final structured output
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                          SERIALIZER                          │
+│  - HL7: segmentsToHL7()                                      │
+│  - FHIR: JSON.stringify()                                    │
+└───────────────┬──────────────────────────────────────────────┘
+                │ HL7 string or FHIR JSON
+                ▼
+┌──────────────────────────────────────────────────────────────┐
+│                        SENDER CLIENTS                        │
+│  - MLLP Sender → downstream HL7 system                       │
+│  - FHIR Sender → REST endpoint                               │
+└──────────────────────────────────────────────────────────────┘
