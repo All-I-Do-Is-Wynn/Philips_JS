@@ -5,7 +5,7 @@ export function normalizeHL7(rawHL7) {
     const parsed = parseHL7(rawHL7); // Convert HL7 → JSON structure
 
     const messageType = parsed?.MSH?.[8] || null; // e.g., "ADT^A01"
-    const patientId = parsed?.PID?.[3] || null;
+    const patientId = parsed?.PID?.[5] || null;
 
     return {
       protocol: "HL7v2",

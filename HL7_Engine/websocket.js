@@ -65,6 +65,7 @@ export function startWebSocket() {
             const routed = await routeMessage(nmo);
 
             log(JSON.stringify(routed));
+            
             ws.send(JSON.stringify({
             type: "preview",
             data: JSON.stringify(routed, null, 2)

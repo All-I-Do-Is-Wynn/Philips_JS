@@ -1,0 +1,22 @@
+Differenciate Rhapsody workflow vs my created HL7 Engine.
+
+
+
+Rhapsody:
+Listeners → Filters → Mappers → Routers → Destinations
+
+
+My Engine:
+Listeners → Parser → Normalizer → Router → Pipeline → Mapping → Serializer → Sender
+
+
+
+
+
+
+
+
+
+
+
+
