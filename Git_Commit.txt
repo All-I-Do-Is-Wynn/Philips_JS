@@ -4,3 +4,26 @@ To update github repository main branch.
 1.) git add .
 2.) git commit -m "<comment>"
 3.) git push origin main
+
+
+
+To move to branches in git.
+(In bash terminal)
+1.) git checkout <branch>       (ex. "main" or "feature/XML")
+2.) git add .
+3.) git commit -m "<comment>"
+4.) git push origin <branch>
+
+To move using switch (more modern than checkout)
+(In bash terminal)
+1.) git switch <branch>       (ex. "main" or "feature/XML")
+2.) git add .
+3.) git commit -m "<comment>"
+4.) git push origin <branch>
+
+// stash my changes, then go to main
+3.)b.) git stash push -m "my temp work"
+4.)b.) git switch main
+//returning to feature branch
+5.)b.) git switch <branch>    (ex. "feature/XML")
+6.)b.) git stash pop
