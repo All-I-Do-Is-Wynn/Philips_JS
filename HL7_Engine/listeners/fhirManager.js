@@ -2,6 +2,8 @@ import http from "http";
 import { normalizefhir } from "../normalizers/normalizefhir.js";
 import { routeMessage } from "../router/routeMessage.js";
 import { log } from "../logStream.js";
+import { parseStringPromise } from "xml2js";
+
 
 let fhirServer = null;
 
@@ -18,48 +20,58 @@ export function startFhir(port = 3000) {
 
       req.on("data", chunk => { body += chunk; });
 
-      req.on("end", () => {
-        try {
-            log(`FHIR raw body: "${body}"`);
+      req.on("end", async () => {
+  try {
+    log(`FHIR raw body: "${body}"`);
 
-          const resource = JSON.parse(body);
+    let resource;
 
-          log("--- Raw FHIR Resource Received ---");
-          log(JSON.stringify(resource, null, 2));
+    const contentType = req.headers["content-type"] || "";
 
-          // Normalize
-          const nmo = normalizefhir(resource);
+    if (contentType.includes("json")) {
+      resource = JSON.parse(body);
+    } 
+    else if (contentType.includes("xml")) {
+      resource = await parseStringPromise(body, { explicitArray: false });
+    } 
+    else {
+      throw new Error(`Unsupported Content-Type: ${contentType}`);
+    }
 
-          log("--- Normalized FHIR Message Object ---");
-          log(JSON.stringify(nmo, null, 2));
+    log("--- Raw FHIR Resource Received ---");
+    log(JSON.stringify(resource, null, 2));
 
-          // Route
-          routeMessage(nmo);
+    const nmo = normalizefhir(resource);
 
-          // Respond
-          res.writeHead(201, { "Content-Type": "application/fhir+json" });
-          res.end(JSON.stringify({
-            resourceType: "OperationOutcome",
-            issue: [{
-              severity: "information",
-              code: "informational",
-              diagnostics: "Resource accepted and normalized"
-            }]
-          }));
+    log("--- Normalized FHIR Message Object ---");
+    log(JSON.stringify(nmo, null, 2));
 
-        } catch (err) {
-            log(`FHIR parse error: ${err.message}`);
-          res.writeHead(400, { "Content-Type": "application/fhir+json" });
-          res.end(JSON.stringify({
-            resourceType: "OperationOutcome",
-            issue: [{
-              severity: "error",
-              code: "invalid",
-              diagnostics: err.message
-            }]
-          }));
-        }
-      });
+    routeMessage(nmo);
+
+    res.writeHead(201, { "Content-Type": "application/fhir+json" });
+    res.end(JSON.stringify({
+      resourceType: "OperationOutcome",
+      issue: [{
+        severity: "information",
+        code: "informational",
+        diagnostics: "Resource accepted and normalized"
+      }]
+    }));
+
+  } catch (err) {
+    log(`FHIR parse error: ${err.message}`);
+    res.writeHead(400, { "Content-Type": "application/fhir+json" });
+    res.end(JSON.stringify({
+      resourceType: "OperationOutcome",
+      issue: [{
+        severity: "error",
+        code: "invalid",
+        diagnostics: err.message
+      }]
+    }));
+  }
+});
+
 
     } else {
       res.writeHead(404);

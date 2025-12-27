@@ -1,6 +1,8 @@
 // FHIR Sender Client (WebSocket-ready)
 import { log, logs } from "../logStream.js";
 import fetch from "node-fetch";
+import { create } from "xmlbuilder2";
+
 
 // Example FHIR resources
 export const fhirResources = {
@@ -79,19 +81,73 @@ export const fhirResources = {
   }
 };
 
+function convertToFhirXml(obj) {
+  if (obj === null || obj === undefined) return null;
+
+  // Primitive value → FHIR attribute
+  if (typeof obj === "string" || typeof obj === "number" || typeof obj === "boolean") {
+    return { "@value": obj };
+  }
+
+  // Arrays → list of elements
+  if (Array.isArray(obj)) {
+    return obj.map(item => convertToFhirXml(item));
+  }
+
+  // Objects → nested XML
+  const result = {};
+  for (const key of Object.keys(obj)) {
+    result[key] = convertToFhirXml(obj[key]);
+  }
+  return result;
+}
+
+
+// Convert JSON → XML string
+function toXml(resource) {
+  const rootName = resource.resourceType;
+
+  // Clone without resourceType
+  const { resourceType, ...rest } = resource;
+
+  const xmlObj = {
+    [rootName]: {
+      "@xmlns": "http://hl7.org/fhir",
+      ...convertToFhirXml(rest)
+    }
+  };
+
+  return create(xmlObj).end({ prettyPrint: true });
+}
+
+
+
 // Exported function for WebSocket usage
-export async function sendResource(resource) {
+export async function sendResource(resource, format = "json") {
   try {
+    let body;
+    let contentType;
+
+    if (format === "xml") {
+      body = toXml(resource);
+      contentType = "application/fhir+xml";
+    } else {
+      body = JSON.stringify(resource);
+      contentType = "application/fhir+json";
+    }
+
     const response = await fetch("http://localhost:3000/fhir", {
       method: "POST",
-      headers: { "Content-Type": "application/fhir+json" },
-      body: JSON.stringify(resource)
+      headers: { "Content-Type": contentType },
+      body
     });
 
     const data = await response.json();
     console.log("\n--- FHIR Listener Response ---");
     console.log(JSON.stringify(data, null, 2));
+
   } catch (err) {
     console.error("Error sending FHIR resource:", err.message);
   }
 }
+

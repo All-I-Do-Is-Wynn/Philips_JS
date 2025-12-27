@@ -7,10 +7,19 @@ ws.onerror = (err) => console.log("WS ERROR", err);
 ws.onclose = () => console.log("WS CLOSED");
 console.log("RAW WS MESSAGE:");
 
+window.updateFHIRXMLPreview = updateFHIRXMLPreview;
+
+
 ws.onmessage = (event) => {
     
+  let msg;
 
-  const msg = JSON.parse(event.data);
+  try {
+    msg = JSON.parse(event.data);
+  } catch (err) {
+    console.error("WS JSON parse failed:", err);
+    return;
+  }
 
   if (msg.type === "logs") {
     document.getElementById("terminal").textContent =
@@ -41,6 +50,11 @@ function sendFHIR() {
   ws.send(JSON.stringify({ action: "send-fhir", index }));
 }
 
+function sendXMLFHIR() {
+  const index = document.getElementById("xmlSelect").value;
+  ws.send(JSON.stringify({ action: "send-xml-fhir", index }));
+}
+
 function updateHL7Preview() {
   const index = document.getElementById("hl7Select").value;
   ws.send(JSON.stringify({ action: "preview-hl7", index }));
@@ -49,6 +63,11 @@ function updateHL7Preview() {
 function updateFHIRPreview() {
   const index = document.getElementById("fhirSelect").value;
   ws.send(JSON.stringify({ action: "preview-fhir", index }));
+}
+
+function updateFHIRXMLPreview() {
+  const index = document.getElementById("xmlSelect").value;
+  ws.send(JSON.stringify({ action: "preview-fhir-xml", index }));
 }
 
 function previewHL7Route() {
@@ -70,5 +89,7 @@ function runFHIRRoute() {
   const index = document.getElementById("fhirSelect").value;
   ws.send(JSON.stringify({ action: "run-route-fhir", index }));
 }
+
+
 
 

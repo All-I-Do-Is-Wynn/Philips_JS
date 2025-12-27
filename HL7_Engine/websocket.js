@@ -9,6 +9,46 @@ import { normalizefhir } from "./normalizers/normalizefhir.js";
 import { routeMessage } from "./router/routeMessage.js";
 import { previewRoute } from "./mapping/previewRoute.js";
 import { segmentsToHL7, extractHL7Segments } from "./mapping/hl7serialize.js";
+import { create } from "xmlbuilder2";
+
+
+// Convert JSON → XML string
+function toXml(resource) {
+  const rootName = resource.resourceType;
+
+  // Clone without resourceType
+  const { resourceType, ...rest } = resource;
+
+  const xmlObj = {
+    [rootName]: {
+      "@xmlns": "http://hl7.org/fhir",
+      ...convertToFhirXml(rest)
+    }
+  };
+
+  return create(xmlObj).end({ prettyPrint: true });
+}
+
+function convertToFhirXml(obj) {
+  if (obj === null || obj === undefined) return null;
+
+  // Primitive value → FHIR attribute
+  if (typeof obj === "string" || typeof obj === "number" || typeof obj === "boolean") {
+    return { "@value": obj };
+  }
+
+  // Arrays → list of elements
+  if (Array.isArray(obj)) {
+    return obj.map(item => convertToFhirXml(item));
+  }
+
+  // Objects → nested XML
+  const result = {};
+  for (const key of Object.keys(obj)) {
+    result[key] = convertToFhirXml(obj[key]);
+  }
+  return result;
+}
 
 
 export function startWebSocket() {
@@ -34,7 +74,11 @@ export function startWebSocket() {
             sendHL7(hl7Messages[data.index]);
             break;
         case "send-fhir":
-            sendResource(fhirResources[data.index]);
+            sendResource(fhirResources[data.index], "json");
+            break;
+        case "send-xml-fhir":
+            log(data.index);
+            sendResource(fhirResources[data.index], "xml");
             break;
         case "preview-hl7":
             ws.send(JSON.stringify({
@@ -46,6 +90,13 @@ export function startWebSocket() {
             ws.send(JSON.stringify({
             type: "preview",
             data: JSON.stringify(fhirResources[data.index], null, 2)
+            }));
+            break;
+        case "preview-fhir-xml":
+            const xml = toXml(fhirResources[data.index]);  // reuse your XML builder
+            ws.send(JSON.stringify({
+            type: "preview",
+            data: xml
             }));
             break;
         case "preview-route-hl7": {
