@@ -77,7 +77,6 @@ export function startWebSocket() {
             sendResource(fhirResources[data.index], "json");
             break;
         case "send-xml-fhir":
-            log(data.index);
             sendResource(fhirResources[data.index], "xml");
             break;
         case "preview-hl7":
