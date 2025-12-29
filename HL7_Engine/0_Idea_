@@ -36,7 +36,7 @@ HL7 Engine Roadmap to Start
         ▼                       ▼                        ▼
 ┌──────────────┐       ┌────────────────┐       ┌──────────────────┐
 │ HL7 v2 MLLP  │       │  FHIR REST API │       │ Admin / Dashboard │
-│ Listener     │       │ Listener       │       │ (optional)        │
+│ Listener     │       │ Listener       │       │         │
 │ (TCP 2575)   │       │ (HTTP 3000)    │       │ (HTTP 8081)       │
 └──────────────┘       └────────────────┘       └──────────────────┘
         │                       │
@@ -99,7 +99,7 @@ HL7 Listener (TCP 2575)        FHIR Listener (HTTP 3000)
    Transform HL7↔FHIR   Save to DB   Forward to EHR
         │                │                │
         ▼                ▼                ▼
- Downstream Systems (Epic, Cerner, DB, Analytics)
+ Downstream Systems (Epic, Cerner, DB)
 
 
 UI Output workflow
