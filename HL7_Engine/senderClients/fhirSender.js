@@ -141,7 +141,7 @@ export async function sendResource(resource, format = "json") {
       headers: { "Content-Type": contentType },
       body
     });
-
+    log(body);
     const data = await response.json();
     console.log("\n--- FHIR Listener Response ---");
     console.log(JSON.stringify(data, null, 2));
