@@ -1,4 +1,4 @@
-// engine/senderClients/hl7Sender.js
+// engine/senderClients/mllpSender.js
 import net from "net";
 import { log } from "../logStream.js";
 
