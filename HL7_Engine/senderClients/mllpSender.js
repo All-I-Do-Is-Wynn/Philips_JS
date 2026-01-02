@@ -31,6 +31,7 @@ function frameMessage(message) {
   ]);
 }
 
+
 // Exported function for WebSocket usage
 export function sendHL7(message, host = "127.0.0.1", port = 2575) {
   return new Promise((resolve, reject) => {

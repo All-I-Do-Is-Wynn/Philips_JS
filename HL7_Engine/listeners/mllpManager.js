@@ -3,6 +3,7 @@ import net from "net";
 import { normalizeHL7 } from "../normalizers/normalizehl7.js";
 import { routeMessage } from "../router/routeMessage.js";
 import { log } from "../logStream.js";
+import { segmentsToHL7, extractHL7Segments } from "../mapping/hl7serialize.js";
 
 const MLLP = {
   SB: 0x0b,
@@ -45,7 +46,7 @@ export function startMllp(port = 2575, host = "0.0.0.0") {
   mllpServer = net.createServer((socket) => {
     let buffer = Buffer.alloc(0);
 
-    socket.on("data", (chunk) => {
+    socket.on("data", async (chunk) => {
       buffer = Buffer.concat([buffer, chunk]);
 
       while (true) {
@@ -71,7 +72,9 @@ export function startMllp(port = 2575, host = "0.0.0.0") {
           log(JSON.stringify(nmo, null, 2));
 
           // Route
-          routeMessage(nmo);
+          const routed = await routeMessage(nmo,JSON.stringify("cerner"));
+          //log("--- Routed Output ---");
+          //log(JSON.stringify(routed, null, 2));
 
           // ACK
           const ack = buildAck(message, "AA");

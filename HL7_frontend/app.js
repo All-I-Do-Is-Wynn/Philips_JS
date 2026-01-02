@@ -77,7 +77,12 @@ function previewHL7Route() {
 
 function runHL7Route() {
   const index = document.getElementById("hl7Select").value;
-  ws.send(JSON.stringify({ action: "run-route-hl7", index }));
+  const destination = document.getElementById("destinationSelect").value;
+  ws.send(JSON.stringify({ 
+    action: "run-route-hl7",
+    index, 
+    destination
+   }));
 }
 
 function previewFHIRRoute() {

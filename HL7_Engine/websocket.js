@@ -64,12 +64,14 @@ export function startWebSocket() {
 
     ws.on("message", async (msg) => {
       const data = JSON.parse(msg);
-
+      
         switch (data.action) {
         case "start-mllp": startMllp(); break;
         case "stop-mllp": stopMllp(); break;
         case "start-fhir": startFhir(); break;
         case "stop-fhir": stopFhir(); break;
+
+        // SENDERS
         case "send-hl7":
             sendHL7(hl7Messages[data.index]);
             break;
@@ -79,6 +81,8 @@ export function startWebSocket() {
         case "send-xml-fhir":
             sendResource(fhirResources[data.index], "xml");
             break;
+
+        // PREVIEW PANES
         case "preview-hl7":
             ws.send(JSON.stringify({
             type: "preview",
@@ -109,12 +113,13 @@ export function startWebSocket() {
             }));
             break;
         }
+
+        // TO send outbound HL7 messages
         case "run-route-hl7": {
             const raw = hl7Messages[data.index];
             const nmo = normalizeHL7(raw);
-            const routed = await routeMessage(nmo);
-
-            log(JSON.stringify(routed));
+        
+            const routed = await routeMessage(nmo, JSON.stringify(data.destination));
             
             ws.send(JSON.stringify({
             type: "preview",

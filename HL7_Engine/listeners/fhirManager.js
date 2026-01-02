@@ -47,7 +47,7 @@ export function startFhir(port = 3000) {
     log("--- Normalized FHIR Message Object ---");
     log(JSON.stringify(nmo, null, 2));
 
-    routeMessage(nmo);
+    routeMessage(nmo,JSON.stringify("epic"));
 
     res.writeHead(201, { "Content-Type": "application/fhir+json" });
     res.end(JSON.stringify({

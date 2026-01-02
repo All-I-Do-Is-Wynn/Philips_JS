@@ -16,7 +16,7 @@ export async function processInbound(raw, type) {
     log(JSON.stringify(nmo, null, 2));
 
     const routed = await routeMessage(nmo);
-
+    log("tmp");
     log("--- Routed Output ---");
     log(JSON.stringify(routed, null, 2));
 
