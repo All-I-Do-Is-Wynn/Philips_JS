@@ -8,7 +8,6 @@ import { sendHL7 } from "../senderClients/mllpSender.js";
 export async function routeMessage(nmo, destination) {
   log(`Routing message: ${nmo.type || nmo.resourceType}`);
   destination = destination.replace(/"/g, "").trim(); // Trims Quotes off of "cerner" and "epic"
-  log("Destination = "+destination);
 
   // Destination Logic
   if (destination === "cerner") {
