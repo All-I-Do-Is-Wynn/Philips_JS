@@ -267,3 +267,29 @@ HL7 Workflow
 │  - MLLP Sender → downstream HL7 system                       │
 │  - FHIR Sender → REST endpoint                               │
 └──────────────────────────────────────────────────────────────┘
+
+
+HL7 data workflow (from patient monitor)
+[Philips Monitor]
+      ↓ (proprietary device protocol)
+[IntelliBridge EC40/80 or Enterprise]
+      ↓ (HL7 v2 ORU messages)
+[Your Integration Engine (Rhapsody-like)]
+      ↓
+  ┌──────────────┬───────────────┐
+  │ Cerner (HL7) │ Epic (FHIR)   │
+  └──────────────┴───────────────┘
+
+
+Integrate file watcher for PNG files
+
+For presentation:
+- Example: Cerner = MLLP listener, EPIC = FHIR listener
+- Demonstrate MLLP vs FHIR input (TCP/IP vs HTTP request)
+- Demonstrate FHIR vs XML viewing in the preview panel
+- Demonstrate HL7 to FHIR transformations
+- Demonstrate HL7/FHIR -> NMO object -> pipeline endpoint
+- Deomnstrate HL7/FHIR -> 
+
+For presentation:
+- 

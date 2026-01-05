@@ -12,7 +12,7 @@ import { segmentsToHL7, extractHL7Segments } from "./mapping/hl7serialize.js";
 import { create } from "xmlbuilder2";
 
 
-// Convert JSON → XML string
+// FOR FHIR Convert JSON → XML string
 function toXml(resource) {
   const rootName = resource.resourceType;
 
