@@ -291,5 +291,5 @@ For presentation:
 - Demonstrate HL7/FHIR -> NMO object -> pipeline endpoint
 - Deomnstrate HL7/FHIR -> 
 
-For presentation:
-- 
+If issue with node (in Terminal)
+taskkill /im node.exe /f

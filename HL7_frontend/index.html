@@ -14,6 +14,7 @@
     <button onclick="send('stop-mllp')">Stop MLLP</button>
     <button onclick="send('stop-fhir')">Stop FHIR</button>
     
+    
     <h3></h3>
     <label for="destinationSelect">Destination:</label>
     <select id="destinationSelect">
@@ -36,10 +37,10 @@
         <option value="9">RDS^O13</option>
         <option value="10">VXU^V04</option>
     </select>
-    <button onclick="previewHL7Route()">Preview Routed HL7</button>
+    <button onclick="previewHL7Route()">Preview HL7->FHIR</button>
     <button onclick="sendHL7()">Inbound HL7 Example</button>
     
-    <button onclick="runHL7Route()">Send HL7 to Cerner</button>
+    <button onclick="runHL7Route()">Send HL7 to Destination</button>
   
 
     <h3>FHIR Sender</h3>
@@ -50,12 +51,12 @@
         <option value="4">Immunization</option>
         <option value="5">MedicationRequest</option>
     </select>
-  <button onclick="previewFHIRRoute()">Preview Routed FHIR</button>
+  <button onclick="previewFHIRRoute()">Preview FHIR->HL7</button>
   <button onclick="sendFHIR()">Inbound JSON Example</button>
   
   
-  <!--<button onclick="runFHIRRoute()">Run FHIR->HL7 pipeline</button>
-  -->
+  <button onclick="runFHIRRoute()">Send FHIR to Destination</button>
+  
   <h3></h3>
     <select id="xmlSelect" onchange="updateFHIRXMLPreview()">
         <option value="1">Patient</option>
@@ -64,7 +65,7 @@
         <option value="4">Immunization</option>
         <option value="5">MedicationRequest</option>
     </select>
-  <button onclick="sendXMLFHIR()">Inbound XML Example</button>
+  <!--<button onclick="sendXMLFHIR()">Inbound XML Example</button>-->
 
     <h3>Message Preview</h3>
     <pre id="previewBox" class="preview"></pre>

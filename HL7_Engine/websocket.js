@@ -114,12 +114,12 @@ export function startWebSocket() {
             break;
         }
 
-        // TO send outbound HL7 messages
+        // To send outbound HL7 messages
         case "run-route-hl7": {
             const raw = hl7Messages[data.index];
             const nmo = normalizeHL7(raw);
-        
-            const routed = await routeMessage(nmo, JSON.stringify(data.destination));
+
+            const routed = await routeMessage(nmo, data.destination);
             
             ws.send(JSON.stringify({
             type: "preview",
@@ -143,18 +143,17 @@ export function startWebSocket() {
             }));
             break;
         }
+
+        // To send outbound FHIR messages
         case "run-route-fhir": {
             const raw = fhirResources[data.index];
             const nmo = normalizefhir(raw);
-            const routed = await routeMessage(nmo);
-
-            // routed is already the HL7 segment array
-            const hl7String = segmentsToHL7(routed);
-
-            log(hl7String); // ws send is not working properly, figure out later
+            
+            const routed = await routeMessage(nmo, data.destination);
+            
             ws.send(JSON.stringify({
             type: "preview",
-            data: hl7String
+            data: JSON.stringify(routed, null, 2)
             }));
             break;
             }

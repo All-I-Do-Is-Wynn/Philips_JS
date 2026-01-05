@@ -33,8 +33,9 @@ ws.onmessage = (event) => {
 
   document.getElementById("previewBox").textContent = formatted;
 }
-
+  
 };
+
 
 function send(action) {
   ws.send(JSON.stringify({ action }));
@@ -82,7 +83,7 @@ function runHL7Route() {
     action: "run-route-hl7",
     index, 
     destination
-   }));
+  }));
 }
 
 function previewFHIRRoute() {
@@ -92,7 +93,12 @@ function previewFHIRRoute() {
 
 function runFHIRRoute() {
   const index = document.getElementById("fhirSelect").value;
-  ws.send(JSON.stringify({ action: "run-route-fhir", index }));
+  const destination = document.getElementById("destinationSelect").value;
+  ws.send(JSON.stringify({
+    action: "run-route-fhir",
+    index,
+    destination
+  }));
 }
 
 
