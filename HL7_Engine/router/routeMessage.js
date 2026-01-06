@@ -28,12 +28,14 @@ export async function routeMessage(nmo, destination) {
       host: "cerner.example.com",
       port: 2100
       });*/
-      log("Sent below raw HL7 message to Cerner[IP:PORT] via MLLP");
+      
       if (nmo.protocol === "HL7v2"){
+        log("Sent below raw MLLP message to Cerner[IP:PORT]");
         log(nmo.raw);
         return nmo.raw;
       }
       if (nmo.protocol === "FHIR"){
+        log("Sent below transformed JSON->MLLP message to Cerner[IP:PORT]");
         const hl7 = await mapEngine("FHIR", "HL7v2", nmo);
         const output = segmentsToHL7(hl7);
         log(output);
@@ -55,13 +57,14 @@ export async function routeMessage(nmo, destination) {
       if (rule.match(nmo)) {
       log(`Matched pipeline: ${rule.pipeline}`);
       const routed = await runPipeline(rule.pipeline, nmo);
-      log("Sent FHIR JSON message to Epic[HTTP_URL] via HTTP");
+      
       if (nmo.protocol === "HL7v2"){
+        log("Sent below transformed MLLP->JSON message to Epic[HTTP_URL]");
         log(JSON.stringify(routed,null,2));
         return routed;  // <-- CRITICAL
       }
       if (nmo.protocol === "FHIR"){
-        
+        log("Sent below raw FHIR JSON message to Epic[HTTP_URL]");
         log(JSON.stringify(nmo.raw,null,2));
         return nmo.raw;
       }

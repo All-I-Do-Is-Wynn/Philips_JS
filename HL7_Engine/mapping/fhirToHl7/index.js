@@ -2,7 +2,7 @@
 
 import { patientToAdt } from "./patientToAdt.js";
 import { observationToOru } from "./observationToOru.js";
-import { encounterToSiu } from "./encounterToSiu.js";
+import { encounterToAdt } from "./encounterToAdt.js";
 import { immunizationToVxu } from "./immunizationToVxu.js";
 import { documentReferenceToMdm } from "./documentReferenceToMdm.js";
 import { claimToDft } from "./claimToDft.js";
@@ -24,7 +24,7 @@ export function mapFHIRtoHL7(nmo) {
   }
 
   if (resourceType === "Encounter") {
-    return encounterToSiu(res);
+    return encounterToAdt(res);
   }
 
   if (resourceType === "Immunization") {

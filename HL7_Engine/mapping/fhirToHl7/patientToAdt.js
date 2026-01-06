@@ -1,7 +1,7 @@
 import { buildMSH } from "../hl7Header.js";
 
 export function patientToAdt(patient) {
-  const msh = buildMSH("ADT^A01");
+  const msh = buildMSH("ADT^A08");
 
   const name = patient.name?.[0] || {};
   const family = name.family || "";

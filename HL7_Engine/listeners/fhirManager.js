@@ -23,7 +23,7 @@ export function startFhir(port = 3000) {
 
       req.on("end", async () => {
   try {
-    log(`FHIR raw body: "${body}"`);
+    //log(`FHIR raw body: "${body}"`);
 
     let resource;
 
