@@ -284,12 +284,16 @@ HL7 data workflow (from patient monitor)
 Integrate file watcher for PNG files
 
 For presentation:
-- Example: Cerner = MLLP listener, EPIC = FHIR listener
-- Demonstrate MLLP vs FHIR input (TCP/IP vs HTTP request)
-- Demonstrate FHIR vs XML viewing in the preview panel
-- Demonstrate HL7 to FHIR transformations
-- Demonstrate HL7/FHIR -> NMO object -> pipeline endpoint
-- Deomnstrate HL7/FHIR -> 
+- Inbound normalization (HL7 + FHIR): not a parser, real integration layer
+    - HL7v2 MLLP -> NMO
+    - FHIR JSON -> NMO
+    - FHIR XML -> NMO
+- Transformation (FHIR -> HL7v2 and HL7v2 -> FHIR)
+    - FHIR -> MLLP
+    - MLLP -> FHIR
+    - 
+
+
 
 If issue with node (in Terminal)
 taskkill /im node.exe /f
