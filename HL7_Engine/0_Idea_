@@ -291,7 +291,9 @@ For presentation:
 - Transformation (FHIR -> HL7v2 and HL7v2 -> FHIR)
     - FHIR -> MLLP
     - MLLP -> FHIR
-    - 
+- Routing logic
+- Outbound delivery
+- UI features
 
 
 
