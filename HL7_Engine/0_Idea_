@@ -280,8 +280,10 @@ HL7 data workflow (from patient monitor)
   │ Cerner (HL7) │ Epic (FHIR)   │
   └──────────────┴───────────────┘
 
-
-Integrate file watcher for PNG files
+To Do for interview:
+- Integrate file watcher for PNG files
+- Update presentation to include notes below.
+- Condense notes on powerpoint slides
 
 For presentation:
 - Inbound normalization (HL7 + FHIR): not a parser, real integration layer
