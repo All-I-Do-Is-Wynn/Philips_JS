@@ -281,9 +281,9 @@ HL7 data workflow (from patient monitor)
   └──────────────┴───────────────┘
 
 To Do for interview:
-- Integrate file watcher for PNG files
-- Update presentation to include notes below.
-- Condense notes on powerpoint slides
+- Integrate file watcher for PNG files (Due 1/13/26)
+- Update presentation to include notes below. (Due 1/12/26)
+- Condense notes on powerpoint slides (Due 1/12/26)
 
 For presentation:
 - Inbound normalization (HL7 + FHIR): not a parser, real integration layer
